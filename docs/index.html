@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Churn Prediction Telco | Proyecto de Aprendizaje Estadístico</title>
+<meta name="description" content="Sistema Predictivo de Abandono de Clientes mediante Aprendizaje Estadístico Supervisado. UPAO 2026.">
+<style>
+  :root{
+    --azul:#1d4ed8; --azul-osc:#0f2a6b; --tinta:#0f172a; --gris:#475569; --borde:#e2e8f0;
+    --fondo:#f8fafc; --verde:#15803d; --rojo:#b91c1c; --ambar:#b45309;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",Calibri,Roboto,Arial,sans-serif;color:var(--tinta);background:#fff;line-height:1.55}
+  a{color:var(--azul)}
+  header{background:linear-gradient(135deg,var(--azul-osc),var(--azul));color:#fff;padding:34px 0 28px}
+  .contenedor{max-width:1120px;margin:0 auto;padding:0 28px}
+  header .inst{font-size:13px;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+  header h1{margin:8px 0 6px;font-size:30px;line-height:1.2}
+  header p{margin:0;opacity:.92;font-size:15.5px}
+  .botones{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px}
+  .boton{display:inline-block;padding:9px 16px;border-radius:8px;background:#fff;color:var(--azul-osc);font-weight:600;text-decoration:none;font-size:14px}
+  .boton.sec{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}
+  nav{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--borde);box-shadow:0 1px 3px rgba(15,23,42,.05)}
+  nav .contenedor{display:flex;gap:4px}
+  .pestana{border:0;background:none;padding:15px 18px;font-size:15px;font-weight:600;color:var(--gris);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit}
+  .pestana.activa{color:var(--azul);border-bottom-color:var(--azul)}
+  .pestana .num{display:inline-block;width:22px;height:22px;border-radius:50%;background:#e2e8f0;color:var(--gris);font-size:12px;line-height:22px;text-align:center;margin-right:6px}
+  .pestana.activa .num{background:var(--azul);color:#fff}
+  main{padding:26px 0 50px}
+  .panel{display:none}
+  .panel.activo{display:block}
+  h2{font-size:23px;margin:6px 0 4px}
+  h3{font-size:17px;margin:26px 0 8px;color:var(--azul-osc)}
+  .lead{color:var(--gris);margin:0 0 14px}
+  .tarjetas{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+  .tarjeta{border:1px solid var(--borde);border-radius:12px;padding:14px 16px;background:var(--fondo)}
+  .tarjeta .v{font-size:26px;font-weight:700;color:var(--azul-osc)}
+  .tarjeta .e{font-size:13px;color:var(--gris)}
+  .dos{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .dos figure img{height:330px;object-fit:contain;background:#fff}
+  table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0}
+  th,td{border:1px solid var(--borde);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:#eef2ff;color:var(--azul-osc)}
+  td.n{text-align:right;font-variant-numeric:tabular-nums}
+  td.ok,td.nw{white-space:nowrap}
+  tr.sel td{background:#ecfdf5;font-weight:600}
+  pre{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px 16px;overflow:auto;font-size:12.8px;line-height:1.5;font-family:Consolas,"Cascadia Mono",Menlo,monospace}
+  code{font-family:Consolas,"Cascadia Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:1px 5px;border-radius:4px}
+  pre code{background:none;padding:0;color:inherit}
+  .c{color:#94a3b8}.k{color:#93c5fd}.s{color:#86efac}
+  .pasos{counter-reset:p;list-style:none;padding:0;margin:8px 0}
+  .pasos li{counter-increment:p;position:relative;padding:6px 0 6px 40px}
+  .pasos li::before{content:counter(p);position:absolute;left:0;top:5px;width:28px;height:28px;border-radius:50%;background:var(--azul);color:#fff;font-weight:700;text-align:center;line-height:28px;font-size:14px}
+  .ok{color:var(--verde);font-weight:700}
+  .etq{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700;color:#fff}
+  .alto{background:#dc2626}.medio{background:#d97706}.bajo{background:#16a34a}
+  figure{margin:12px 0}
+  figure img{width:100%;border:1px solid var(--borde);border-radius:10px}
+  figcaption{font-size:13px;color:var(--gris);text-align:center;margin-top:6px}
+  .nota{border-left:4px solid var(--azul);background:#eff6ff;padding:10px 14px;border-radius:6px;font-size:14px}
+  .ciclo{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .ciclo span{border:1px solid var(--borde);border-radius:8px;padding:6px 10px;font-size:13px;background:var(--fondo)}
+  .ciclo span.act{background:var(--azul);color:#fff;border-color:var(--azul)}
+  footer{border-top:1px solid var(--borde);padding:18px 0;color:var(--gris);font-size:13px;text-align:center}
+  @media(max-width:820px){.tarjetas{grid-template-columns:1fr 1fr}.dos{grid-template-columns:1fr}.pestana{padding:12px 8px;font-size:13px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="contenedor">
+    <div class="inst">Universidad Privada Antenor Orrego · Ingeniería de Sistemas e Inteligencia Artificial · Aprendizaje Estadístico · 2026</div>
+    <h1>Sistema Predictivo de Abandono de Clientes (Churn Prediction)</h1>
+    <p>Aprendizaje estadístico supervisado en empresas de telecomunicaciones · Dataset Telco Customer Churn</p>
+    <div class="botones">
+      <a class="boton" href="https://churn-telco-upao.streamlit.app" target="_blank" rel="noopener">Abrir la app web</a>
+      <a class="boton sec" href="https://github.com/TU-USUARIO/churn-prediction-telco" target="_blank" rel="noopener">Ver repositorio en GitHub</a>
+      <a class="boton sec" href="informe/Informe_Proyecto_Churn.pdf" target="_blank" rel="noopener">Descargar informe (PDF)</a>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="contenedor" role="tablist">
+    <button class="pestana" role="tab" data-panel="documentacion"><span class="num">1</span>Documentación del Proyecto</button>
+    <button class="pestana" role="tab" data-panel="codigo"><span class="num">2</span>Código del Sistema</button>
+    <button class="pestana" role="tab" data-panel="ejecucion"><span class="num">3</span>Ejecución y Pruebas</button>
+  </div>
+</nav>
+
+<main class="contenedor">
+
+<!-- ===================================================== PESTAÑA 1 ===================================================== -->
+<section class="panel" id="panel-documentacion" data-id="documentacion" role="tabpanel">
+  <h2>Documentación del Proyecto</h2>
+  <p class="lead">Resumen del problema, los datos, la metodología y los resultados. El detalle completo está en el informe en PDF.</p>
+
+  <div class="tarjetas">
+    <div class="tarjeta"><div class="v">0.835</div><div class="e">ROC-AUC en el conjunto de prueba</div></div>
+    <div class="tarjeta"><div class="v">72.7 %</div><div class="e">Recall: 272 de 374 abandonos detectados</div></div>
+    <div class="tarjeta"><div class="v">52.5 %</div><div class="e">Precisión de las alertas de abandono</div></div>
+    <div class="tarjeta"><div class="v">1.98x</div><div class="e">Más efectivo que contactar clientes al azar</div></div>
+  </div>
+
+  <div class="dos">
+    <div>
+      <h3>Problema a resolver</h3>
+      <p>La pérdida de abonados (<i>churn</i>) reduce los ingresos recurrentes de las operadoras. En el conjunto de referencia, <b>1,869 de 7,043 clientes (26.54 %)</b> cancelaron el servicio. Sin herramientas predictivas, las áreas de fidelización actúan de forma reactiva: las campañas llegan tarde o se aplican de forma masiva, con incentivos para clientes que no pensaban irse.</p>
+      <h3>Objetivo general</h3>
+      <p>Diseñar, entrenar y evaluar un modelo de aprendizaje estadístico supervisado de alta capacidad predictiva para el abandono de clientes, y ponerlo a disposición del área comercial mediante una aplicación web.</p>
+    </div>
+    <div>
+      <h3>Datos</h3>
+      <table>
+        <tr><th>Característica</th><th>Valor</th></tr>
+        <tr><td>Fuente</td><td>Telco Customer Churn (IBM, publicado en Kaggle)</td></tr>
+        <tr><td>Registros / variables</td><td>7,043 clientes · 21 variables</td></tr>
+        <tr><td>Tras la limpieza</td><td>7,032 (11 sin <code>TotalCharges</code>)</td></tr>
+        <tr><td>Partición estratificada</td><td>5,625 entrenamiento · 1,407 prueba (semilla 42)</td></tr>
+        <tr><td>Variables predictoras</td><td>19: perfil, servicios y contrato (45 columnas tras la codificación)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3>Metodología: ciclo de desarrollo de Statistical / Machine Learning</h3>
+  <div class="ciclo">
+    <span>1. Introducción y requisitos</span><span>2. Data-set y preprocesamiento</span><span>3. Planteamiento del modelo</span>
+    <span>4. Entrenamiento con CV de 5 folds</span><span>5. Aplicación al conjunto de prueba</span><span>6. Evaluación</span><span class="act">7. Despliegue</span>
+  </div>
+  <p>Se compararon cuatro modelos con cuatro estrategias de balanceo (sin balanceo, ponderación de clases, SMOTE y submuestreo), aplicadas solo dentro de cada fold de entrenamiento para evitar fuga de información. El umbral de decisión de cada modelo se eligió con las predicciones <i>out-of-fold</i> del entrenamiento.</p>
+
+  <h3>Resultados en el conjunto de prueba (1,407 clientes)</h3>
+  <table>
+    <tr><th>Modelo</th><th>Umbral</th><th>Exactitud</th><th>Precisión</th><th>Recall</th><th>F1</th><th>ROC-AUC</th><th>Brier</th><th>Decisión</th></tr>
+    <tr class="sel"><td>Regresión Logística (C = 10)</td><td class="n">0.33</td><td class="n">0.753</td><td class="n">0.525</td><td class="n">0.727</td><td class="n">0.610</td><td class="n">0.835</td><td class="n">0.140</td><td>Seleccionado (7 de 7 criterios)</td></tr>
+    <tr><td>Regresión Logística + PCA</td><td class="n">0.32</td><td class="n">0.755</td><td class="n">0.528</td><td class="n">0.733</td><td class="n">0.614</td><td class="n">0.831</td><td class="n">0.142</td><td>Descartado: pierde interpretabilidad</td></tr>
+    <tr><td>Random Forest</td><td class="n">0.48</td><td class="n">0.751</td><td class="n">0.520</td><td class="n">0.786</td><td class="n">0.626</td><td class="n">0.834</td><td class="n">0.161</td><td>Descartado: Brier y sobreajuste</td></tr>
+    <tr><td>Gradient Boosting (XGBoost)</td><td class="n">0.25</td><td class="n">0.718</td><td class="n">0.482</td><td class="n">0.824</td><td class="n">0.608</td><td class="n">0.839</td><td class="n">0.138</td><td>Alternativa: precisión bajo la meta</td></tr>
+  </table>
+
+  <div class="dos">
+    <figure><img src="img/matriz_confusion.png" alt="Matriz de confusión"><figcaption>Matriz de confusión del modelo seleccionado.</figcaption></figure>
+    <figure><img src="img/razones_momios.png" alt="Razones de momios"><figcaption>Categorías con mayor efecto en el riesgo de abandono.</figcaption></figure>
+  </div>
+  <p>Las variables más influyentes son el <b>tipo de contrato</b>, la <b>antigüedad</b>, el <b>servicio de internet</b> y los <b>cargos</b>. Se recomienda priorizar a los clientes nuevos con contrato mes a mes y fibra óptica.</p>
+
+  <h3>Documentos del proyecto</h3>
+  <table>
+    <tr><th>Documento</th><th>Contenido</th></tr>
+    <tr><td><a href="informe/Informe_Proyecto_Churn.pdf">Informe del proyecto (PDF)</a></td><td>Secciones 1 a 7: introducción, requerimientos, data-set, aprendizaje, comprobación, evaluación y despliegue.</td></tr>
+    <tr><td><a href="https://github.com/TU-USUARIO/churn-prediction-telco/blob/main/README.md">README.md</a></td><td>Portada del repositorio: resumen, resultados, estructura y forma de ejecución.</td></tr>
+    <tr><td><a href="https://github.com/TU-USUARIO/churn-prediction-telco/blob/main/models/ficha_modelo.json">Ficha técnica del modelo</a></td><td>Hiperparámetros, umbral, métricas, criterios de aceptación y versiones del entorno.</td></tr>
+  </table>
+  <p class="nota"><b>Autores:</b> Ruiz Cueva, Johan · Chavez Sampen, Luis · Lopez Fasabi, Elisson · Polo Valderrama, Benjamin · Cardenas Julian, Piero · Sanchez Velasquez, Gabriela Ximena. <b>Docente:</b> Sagastegui Chigne, Teobaldo Herman.</p>
+</section>
+
+<!-- ===================================================== PESTAÑA 2 ===================================================== -->
+<section class="panel" id="panel-codigo" data-id="codigo" role="tabpanel">
+  <h2>Código del Sistema</h2>
+  <p class="lead">Código fuente modular en Python 3.13. Cada módulo corresponde a una fase del ciclo de desarrollo y a un requisito del informe.</p>
+
+  <div class="dos">
+    <div>
+      <h3>Estructura del repositorio</h3>
+<pre>churn-prediction-telco/
+├── app.py                 <span class="c"># app web (Streamlit)</span>
+├── requirements.txt       <span class="c"># dependencias fijas</span>
+├── data/
+│   ├── WA_Fn-UseC_-Telco-Customer-Churn.csv
+│   └── ejemplos/          <span class="c"># CSV de prueba</span>
+├── src/
+│   ├── churn/
+│   │   ├── config.py      <span class="c"># parámetros</span>
+│   │   ├── datos.py       <span class="c"># carga y limpieza</span>
+│   │   ├── modelo.py      <span class="c"># entrenamiento</span>
+│   │   ├── evaluacion.py  <span class="c"># métricas</span>
+│   │   └── prediccion.py  <span class="c"># alertas RF-03</span>
+│   ├── entrenar.py
+│   └── predecir.py
+├── models/                <span class="c"># .joblib + ficha</span>
+├── reports/               <span class="c"># métricas y figuras</span>
+├── notebooks/             <span class="c"># Google Colab</span>
+├── tests/                 <span class="c"># 31 pruebas pytest</span>
+├── docs/                  <span class="c"># esta página</span>
+└── .github/workflows/pruebas.yml</pre>
+    </div>
+    <div>
+      <h3>Módulos y su función</h3>
+      <table>
+        <tr><th>Archivo</th><th>Responsabilidad</th><th>Informe</th></tr>
+        <tr><td><a href="https://github.com/TU-USUARIO/churn-prediction-telco/blob/main/src/churn/config.py"><code>config.py</code></a></td><td>Rutas, semilla 42, variables, C = 10, cortes de riesgo y criterios</td><td>RNF-02</td></tr>
+        <tr><td><a href="https://github.com/TU-USUARIO/churn-prediction-telco/blob/main/src/churn/datos.py"><code>datos.py</code></a></td><td>Carga, normalización de texto, <code>TotalCharges</code>, partición 80/20</td><td>3.1 a 3.3</td></tr>
+        <tr><td><a href="https://github.com/TU-USUARIO/churn-prediction-telco/blob/main/src/churn/modelo.py"><code>modelo.py</code></a></td><td>Pipeline, CV de 5 folds, umbral por F1, guardado</td><td>4.2, 5.1</td></tr>
+        <tr><td><a href="https://github.com/TU-USUARIO/churn-prediction-telco/blob/main/src/churn/evaluacion.py"><code>evaluacion.py</code></a></td><td>Métricas, criterios de aceptación y gráficos</td><td>6.1, 6.2</td></tr>
+        <tr><td><a href="https://github.com/TU-USUARIO/churn-prediction-telco/blob/main/src/churn/prediccion.py"><code>prediccion.py</code></a></td><td>Validación de entradas, alertas y explicación</td><td>RF-03</td></tr>
+        <tr><td><a href="https://github.com/TU-USUARIO/churn-prediction-telco/blob/main/app.py"><code>app.py</code></a></td><td>Interfaz web: individual, lote y desempeño</td><td>7.2</td></tr>
+      </table>
+      <h3>Tecnologías</h3>
+      <p>Python 3.13 · pandas · NumPy · scikit-learn · joblib · Matplotlib · Streamlit · pytest · GitHub Actions · GitHub Pages.</p>
+    </div>
+  </div>
+
+  <h3>Pipeline del modelo final (<code>src/churn/modelo.py</code>)</h3>
+<pre><code><span class="k">def</span> construir_pipeline():
+    <span class="s">"""Escalado + one-hot (45 columnas) + Regresión Logística."""</span>
+    pre = ColumnTransformer([
+        (<span class="s">"num"</span>, StandardScaler(), [<span class="s">"tenure"</span>, <span class="s">"MonthlyCharges"</span>, <span class="s">"TotalCharges"</span>]),
+        (<span class="s">"cat"</span>, OneHotEncoder(handle_unknown=<span class="s">"ignore"</span>, sparse_output=<span class="k">False</span>), VARS_CATEGORICAS),
+        (<span class="s">"bin"</span>, <span class="s">"passthrough"</span>, [<span class="s">"SeniorCitizen"</span>])])
+    <span class="k">return</span> Pipeline([(<span class="s">"pre"</span>, pre),
+                     (<span class="s">"clf"</span>, LogisticRegression(C=<span class="k">10</span>, max_iter=<span class="k">2000</span>))])
+
+<span class="k">def</span> elegir_umbral(y_true, p_oof):
+    <span class="s">"""Umbral que maximiza el F1 sobre las predicciones out-of-fold (el test no interviene)."""</span>
+    f1s = [f1_score(y_true, (p_oof &gt;= u).astype(int)) <span class="k">for</span> u <span class="k">in</span> UMBRALES_CANDIDATOS]
+    <span class="k">return</span> UMBRALES_CANDIDATOS[np.argmax(f1s)]     <span class="c"># resultado: 0.33</span></code></pre>
+
+  <h3>Generación de alertas (<code>src/churn/prediccion.py</code>)</h3>
+<pre><code><span class="k">def</span> predecir(modelo, df):
+    X = validar_entrada(df)                      <span class="c"># columnas, categorías, numéricos</span>
+    p = modelo[<span class="s">"pipeline"</span>].predict_proba(X)[:, <span class="k">1</span>]   <span class="c"># probabilidad de abandono</span>
+    salida[<span class="s">"nivel_riesgo"</span>] = [nivel_riesgo(v) <span class="k">for</span> v <span class="k">in</span> p]  <span class="c"># bajo / medio / alto</span>
+    salida[<span class="s">"prediccion"</span>] = np.where(p &gt;= modelo[<span class="s">"umbral"</span>], <span class="s">"Abandona"</span>, <span class="s">"Permanece"</span>)
+    salida[<span class="s">"accion_recomendada"</span>] = np.where(p &gt;= modelo[<span class="s">"umbral"</span>],
+                                         <span class="s">"Contactar para retención"</span>, <span class="s">"Seguimiento regular"</span>)
+    <span class="k">return</span> salida</code></pre>
+  <p class="nota">Todo el código está en la pestaña <b>Code</b> del repositorio. Para reproducir el modelo basta ejecutar <code>python src/entrenar.py</code>: se obtiene el mismo umbral (0.33) y la misma matriz de confusión del informe.</p>
+</section>
+
+<!-- ===================================================== PESTAÑA 3 ===================================================== -->
+<section class="panel" id="panel-ejecucion" data-id="ejecucion" role="tabpanel">
+  <h2>Ejecución y Pruebas del Sistema</h2>
+  <p class="lead">Cómo ejecutar el sistema, qué pruebas lo verifican y cuáles fueron sus resultados.</p>
+
+  <div class="dos">
+    <div>
+      <h3>Opción A: app web (sin instalar nada)</h3>
+      <p>Abrir <a href="https://churn-telco-upao.streamlit.app">churn-telco-upao.streamlit.app</a>, completar el formulario del cliente o subir un CSV.</p>
+      <h3>Opción B: Google Colab</h3>
+      <p>Abrir <a href="https://colab.research.google.com/github/TU-USUARIO/churn-prediction-telco/blob/main/notebooks/Ejecucion_en_Colab.ipynb">notebooks/Ejecucion_en_Colab.ipynb</a>: clona el repositorio, entrena, prueba y predice.</p>
+    </div>
+    <div>
+      <h3>Opción C: computadora local</h3>
+<pre><code>git clone https://github.com/TU-USUARIO/churn-prediction-telco.git
+cd churn-prediction-telco
+pip install -r requirements.txt
+python src/entrenar.py          <span class="c"># entrena y evalúa</span>
+python src/predecir.py data/ejemplos/clientes_nuevos_ejemplo.csv
+pytest -v                       <span class="c"># 31 pruebas</span>
+streamlit run app.py            <span class="c"># http://localhost:8501</span></code></pre>
+    </div>
+  </div>
+
+  <h3>Pruebas automáticas (pytest): 31 de 31 aprobadas</h3>
+  <table>
+    <tr><th>Grupo</th><th>Qué se verifica</th><th>Pruebas</th><th>Resultado</th></tr>
+    <tr><td>Datos (<code>test_datos.py</code>)</td><td>7,043 × 21 registros; 1,869 abandonos; 7,032 tras la limpieza; partición 5,625 / 1,407 estratificada y sin fuga</td><td class="n">6</td><td class="ok">✔ aprobadas</td></tr>
+    <tr><td>Modelo (<code>test_modelo.py</code>)</td><td>C = 10 y umbral 0.33; AUC 0.835 y matriz 787/246/102/272; 7 criterios de aceptación; reentrenamiento reproducible</td><td class="n">7</td><td class="ok">✔ aprobadas</td></tr>
+    <tr><td>Predicción (<code>test_prediccion.py</code>)</td><td>Probabilidades en [0, 1]; cortes de riesgo; casos de alto y bajo riesgo; validación de columnas, categorías y negativos; explicación</td><td class="n">15</td><td class="ok">✔ aprobadas</td></tr>
+    <tr><td>App web (<code>test_app.py</code>)</td><td>La app inicia sin errores; predicción individual; lote de 1,407 clientes con 518 alertas</td><td class="n">3</td><td class="ok">✔ aprobadas</td></tr>
+  </table>
+  <p>Las pruebas se ejecutan solas en cada <i>push</i> con GitHub Actions (pestaña <b>Actions</b> del repositorio). <img alt="estado de las pruebas" style="vertical-align:middle" onerror="this.style.display='none'" src="https://github.com/TU-USUARIO/churn-prediction-telco/actions/workflows/pruebas.yml/badge.svg"></p>
+
+  <h3>Casos de prueba funcionales</h3>
+  <table>
+    <tr><th>Caso</th><th>Entrada</th><th>Probabilidad</th><th>Nivel</th><th>Acción del sistema</th></tr>
+    <tr><td class="nw">CP-01</td><td>Cliente de 2 meses, mes a mes, fibra óptica, cheque electrónico, USD 95</td><td class="n">0.720</td><td><span class="etq alto">Alto</span></td><td>Contactar para retención</td></tr>
+    <tr><td class="nw">CP-02</td><td>Mismo cliente con contrato de un año y 24 meses</td><td class="n">0.393</td><td><span class="etq medio">Medio</span></td><td>Contactar para retención (p ≥ 0.33)</td></tr>
+    <tr><td class="nw">CP-03</td><td>Mismo cliente con contrato de dos años, 60 meses y tarjeta automática</td><td class="n">0.081</td><td><span class="etq bajo">Bajo</span></td><td>Seguimiento regular</td></tr>
+    <tr><td class="nw">CP-04</td><td>CSV con los 1,407 clientes de prueba y su etiqueta real</td><td colspan="2">518 alertas · AUC 0.835</td><td>Matriz 787 / 246 / 102 / 272 (igual al informe)</td></tr>
+    <tr><td class="nw">CP-05</td><td>Tipo de contrato «trimestral» (valor no válido)</td><td colspan="2">No aplica</td><td>Mensaje de error con los valores permitidos</td></tr>
+  </table>
+
+  <h3>App web en funcionamiento</h3>
+  <figure><img src="img/app_individual.png" alt="App: predicción individual"><figcaption>Predicción individual: cliente de alto riesgo (CP-01).</figcaption></figure>
+  <figure><img src="img/app_lote.png" alt="App: predicción por lote"><figcaption>Predicción por lote con validación sobre los 1,407 clientes de prueba (CP-04).</figcaption></figure>
+</section>
+</main>
+
+<footer>Universidad Privada Antenor Orrego · Aprendizaje Estadístico · 2026 · Código bajo licencia MIT</footer>
+
+<script>
+  const pestanas = document.querySelectorAll(".pestana");
+  const paneles = document.querySelectorAll(".panel");
+  function mostrar(id){
+    if(!document.getElementById("panel-" + id)) id = "documentacion";
+    pestanas.forEach(b => b.classList.toggle("activa", b.dataset.panel === id));
+    paneles.forEach(p => p.classList.toggle("activo", p.dataset.id === id));
+  }
+  pestanas.forEach(b => b.addEventListener("click", () => {
+    history.replaceState(null, "", "#" + b.dataset.panel);
+    mostrar(b.dataset.panel);
+    window.scrollTo({top: 0});
+  }));
+  window.addEventListener("hashchange", () => mostrar(location.hash.slice(1)));
+  mostrar(location.hash.slice(1));
+</script>
+</body>
+</html>

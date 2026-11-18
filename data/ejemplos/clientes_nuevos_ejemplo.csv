@@ -1,0 +1,11 @@
+customerID,gender,SeniorCitizen,Partner,Dependents,tenure,PhoneService,MultipleLines,InternetService,OnlineSecurity,OnlineBackup,DeviceProtection,TechSupport,StreamingTV,StreamingMovies,Contract,PaperlessBilling,PaymentMethod,MonthlyCharges,TotalCharges
+0604-THJFP,female,0,yes,yes,59,yes,no,dsl,no,yes,no,yes,yes,yes,two year,yes,credit card (automatic),75.95,4542.35
+4059-IIEBK,female,0,no,no,7,yes,yes,fiber optic,no,yes,no,no,no,no,month-to-month,yes,bank transfer (automatic),78.55,522.95
+2228-BZDEE,female,0,no,no,54,yes,no,no,no internet service,no internet service,no internet service,no internet service,no internet service,no internet service,two year,no,mailed check,20.1,1079.45
+2839-RFSQE,female,0,no,no,2,yes,no,no,no internet service,no internet service,no internet service,no internet service,no internet service,no internet service,month-to-month,no,mailed check,20.65,38.7
+5360-LJCNJ,female,0,yes,no,71,yes,yes,fiber optic,no,yes,yes,no,yes,yes,two year,yes,bank transfer (automatic),105.15,7555.0
+7752-XUSCI,female,0,no,no,60,yes,yes,fiber optic,no,yes,yes,no,yes,yes,month-to-month,yes,electronic check,105.9,6396.45
+8277-RVRSV,female,0,yes,yes,33,yes,yes,no,no internet service,no internet service,no internet service,no internet service,no internet service,no internet service,one year,no,credit card (automatic),24.15,800.3
+3530-CRZSB,female,0,no,no,7,yes,no,no,no internet service,no internet service,no internet service,no internet service,no internet service,no internet service,month-to-month,no,mailed check,20.65,155.9
+2845-HSJCY,female,0,yes,yes,14,yes,yes,fiber optic,no,no,yes,no,no,yes,month-to-month,yes,electronic check,87.25,1258.6
+0336-KXKFK,male,0,no,no,72,no,no phone service,dsl,yes,no,yes,yes,yes,yes,two year,yes,credit card (automatic),61.2,4390.25

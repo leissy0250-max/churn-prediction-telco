@@ -1,0 +1,165 @@
+{
+  "proyecto": "Sistema Predictivo de Abandono de Clientes (Churn Prediction)",
+  "version_modelo": "1.0.0",
+  "algoritmo": "Regresión Logística (penalización L2)",
+  "hiperparametros": {
+    "C": 10,
+    "max_iter": 2000,
+    "balanceo": "ninguno"
+  },
+  "umbral_decision": 0.33,
+  "cortes_riesgo": {
+    "medio": 0.3,
+    "alto": 0.6
+  },
+  "datos": {
+    "dataset": "Telco Customer Churn (IBM / Kaggle)",
+    "registros": 7032,
+    "entrenamiento": 5625,
+    "prueba": 1407,
+    "semilla": 42,
+    "variables": [
+      "gender",
+      "SeniorCitizen",
+      "Partner",
+      "Dependents",
+      "tenure",
+      "PhoneService",
+      "MultipleLines",
+      "InternetService",
+      "OnlineSecurity",
+      "OnlineBackup",
+      "DeviceProtection",
+      "TechSupport",
+      "StreamingTV",
+      "StreamingMovies",
+      "Contract",
+      "PaperlessBilling",
+      "PaymentMethod",
+      "MonthlyCharges",
+      "TotalCharges"
+    ]
+  },
+  "validacion_cruzada": {
+    "folds": 5,
+    "auc_out_of_fold": 0.846,
+    "f1_out_of_fold": 0.6396,
+    "auc_entrenamiento": 0.8509,
+    "brecha_sobreajuste": 0.0049
+  },
+  "metricas_prueba": {
+    "umbral": 0.33,
+    "n": 1407,
+    "accuracy": 0.7527,
+    "precision": 0.5251,
+    "recall": 0.7273,
+    "especificidad": 0.7619,
+    "f1": 0.6099,
+    "roc_auc": 0.8352,
+    "pr_auc": 0.6177,
+    "brier": 0.1405,
+    "mae": 0.278,
+    "rmse": 0.3748,
+    "matriz_confusion": {
+      "VN": 787,
+      "FP": 246,
+      "FN": 102,
+      "VP": 272
+    }
+  },
+  "criterios_aceptacion": {
+    "roc_auc": {
+      "valor": 0.8352,
+      "meta": ">= 0.8",
+      "cumple": true
+    },
+    "recall": {
+      "valor": 0.7273,
+      "meta": ">= 0.7",
+      "cumple": true
+    },
+    "precision": {
+      "valor": 0.5251,
+      "meta": ">= 0.5",
+      "cumple": true
+    },
+    "f1": {
+      "valor": 0.6099,
+      "meta": ">= 0.6",
+      "cumple": true
+    },
+    "accuracy": {
+      "valor": 0.7527,
+      "meta": "> 0.7342",
+      "cumple": true
+    },
+    "brier": {
+      "valor": 0.1405,
+      "meta": "<= 0.16",
+      "cumple": true
+    },
+    "brecha_sobreajuste": {
+      "valor": 0.0049,
+      "meta": "<= 0.05",
+      "cumple": true
+    }
+  },
+  "razones_de_momios_top10": [
+    {
+      "columna": "MonthlyCharges",
+      "coeficiente": -1.8246,
+      "odds_ratio": 0.1613
+    },
+    {
+      "columna": "tenure",
+      "coeficiente": -1.4028,
+      "odds_ratio": 0.2459
+    },
+    {
+      "columna": "InternetService_fiber optic",
+      "coeficiente": 1.1948,
+      "odds_ratio": 3.3029
+    },
+    {
+      "columna": "InternetService_dsl",
+      "coeficiente": -1.0696,
+      "odds_ratio": 0.3432
+    },
+    {
+      "columna": "Contract_two year",
+      "coeficiente": -0.8262,
+      "odds_ratio": 0.4377
+    },
+    {
+      "columna": "TotalCharges",
+      "coeficiente": 0.6965,
+      "odds_ratio": 2.0066
+    },
+    {
+      "columna": "Contract_month-to-month",
+      "coeficiente": 0.5783,
+      "odds_ratio": 1.783
+    },
+    {
+      "columna": "StreamingTV_no internet service",
+      "coeficiente": -0.5565,
+      "odds_ratio": 0.5732
+    },
+    {
+      "columna": "DeviceProtection_no internet service",
+      "coeficiente": -0.5565,
+      "odds_ratio": 0.5732
+    },
+    {
+      "columna": "TechSupport_no internet service",
+      "coeficiente": -0.5565,
+      "odds_ratio": 0.5732
+    }
+  ],
+  "entorno": {
+    "python": "3.13.18",
+    "scikit_learn": "1.9.1",
+    "numpy": "2.5.3",
+    "fecha_entrenamiento": "2026-11-18 12:20"
+  }
+}
