@@ -1,0 +1,35 @@
+# Integración continua: ejecuta las pruebas automáticamente en cada push o pull request.
+# Los resultados se ven en la pestaña "Actions" del repositorio.
+name: Pruebas del sistema
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar pruebas (datos, modelo, predicción y app)
+        run: pytest -v --junitxml=reports/resultados_pruebas.xml
+
+      - name: Guardar el reporte de pruebas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-pruebas
+          path: reports/resultados_pruebas.xml
